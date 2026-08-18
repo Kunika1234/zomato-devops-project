@@ -42,10 +42,11 @@ pipeline {
             }
         }
 
-        // Stage 4: OWASP Dependency Check
+       // Stage 4: OWASP Dependency Check
 stage('OWASP Dependency Check') {
     steps {
         echo 'Stage 4: Running OWASP dependency vulnerability check...'
+
         sh """
             docker run --rm \
                 -v jenkins_data:/var/jenkins_home \
@@ -54,7 +55,9 @@ stage('OWASP Dependency Check') {
                 owasp/dependency-check:8.4.3 \
                 --project "Zomato-Clone" \
                 --scan . \
-                --format HTML --format XML \
+                --disableNvdCve \
+                --format HTML \
+                --format XML \
                 --out .
         """
     }

@@ -1,0 +1,37 @@
+jenkins:
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "admin"
+          password: "admin"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: true
+
+unclassified:
+  sonarGlobalConfiguration:
+    installations:
+      - name: "SonarQube"
+        serverUrl: "http://sonarqube:9000/sonarqube"
+
+jobs:
+  - script: >
+      pipelineJob('Zomato-Clone') {
+        displayName('Zomato Clone DevSecOps Pipeline')
+        description('End-to-end DevSecOps pipeline for the Zomato Clone application')
+        definition {
+          cpsScm {
+            scm {
+              git {
+                remote {
+                  url('/workspace')
+                }
+                branch('**')
+              }
+            }
+            scriptPath('Jenkinsfile')
+            lightweight(false)
+          }
+        }
+      }

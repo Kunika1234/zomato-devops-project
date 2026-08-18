@@ -43,20 +43,22 @@ pipeline {
         }
 
         // Stage 4: OWASP Dependency Check
-        stage('OWASP Dependency Check') {
-            steps {
-                echo 'Stage 4: Running OWASP dependency vulnerability check...'
-                sh """
-                docker run --rm -v jenkins_data:/var/jenkins_home -w ${WORKSPACE_PATH} \
-                    -v /var/jenkins_home/dependency-check-data:/usr/share/dependency-check/data \
-                    owasp/dependency-check:latest \
-                    --project "Zomato-Clone" \
-                    --scan . \
-                    --format HTML --format XML \
-                    --out .
-                """
-            }
-        }
+stage('OWASP Dependency Check') {
+    steps {
+        echo 'Stage 4: Running OWASP dependency vulnerability check...'
+        sh """
+            docker run --rm \
+                -v jenkins_data:/var/jenkins_home \
+                -w ${WORKSPACE_PATH} \
+                -v dependency-check-data:/usr/share/dependency-check/data \
+                owasp/dependency-check:latest \
+                --project "Zomato-Clone" \
+                --scan . \
+                --format HTML --format XML \
+                --out .
+        """
+    }
+}
 
         // Stage 5: Trivy File System Scan
         stage('Trivy FS Scan') {

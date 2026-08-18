@@ -51,7 +51,7 @@ stage('OWASP Dependency Check') {
                 -v jenkins_data:/var/jenkins_home \
                 -w ${WORKSPACE_PATH} \
                 -v dependency-check-data:/usr/share/dependency-check/data \
-                owasp/dependency-check:latest \
+                owasp/dependency-check:8.4.3 \
                 --project "Zomato-Clone" \
                 --scan . \
                 --format HTML --format XML \

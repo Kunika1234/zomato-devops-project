@@ -85,12 +85,20 @@ stage('OWASP Dependency Check') {
         }
 
         // Stage 7: Trivy Image Scan
-        stage('Trivy Image Scan') {
-            steps {
-                echo 'Stage 7: Scanning built Docker image with Trivy...'
-                sh "docker run --rm aquasec/trivy:latest image --severity HIGH,CRITICAL ${REGISTRY}/${IMAGE_NAME}:latest"
-            }
-        }
+stage('Trivy Image Scan') {
+    steps {
+        echo 'Stage 7: Scanning built Docker image with Trivy...'
+
+        sh '''
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              aquasec/trivy:latest \
+              image \
+              --severity HIGH,CRITICAL \
+              localhost:8082/zomato-clone:latest
+        '''
+    }
+}
 
         // Stage 8: Deploy Container
         stage('Deploy Container') {

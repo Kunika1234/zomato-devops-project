@@ -8,20 +8,26 @@ This project demonstrates how a modern web application can be integrated with De
 
 The application is containerized using **Docker** and supported by a complete DevOps environment including **Jenkins, Prometheus, Grafana, Loki, Promtail, Nginx, and Docker Compose**.
 
+## 🖥️ Application Preview
+
+The Zomato Clone application provides a food discovery and restaurant browsing interface inspired by the Zomato platform.
+
+![Zomato Clone Application](./zomato-home.png.png)
+
 ## 🛠️ Technologies Used
 
-| Category                     | Technologies               |
-| ---------------------------- | -------------------------- |
-| Frontend                     | React.js, JavaScript, SCSS |
-| Version Control              | Git, GitHub                |
-| Containerization             | Docker, Docker Compose     |
-| CI/CD                        | Jenkins                    |
-| Code Quality / Security      | SonarQube                  |
-| Monitoring                   | Prometheus, Grafana        |
-| Logging                      | Loki, Promtail             |
-| Web Server / Reverse Proxy   | Nginx                      |
-| Scripting                    | PowerShell, Batch, Shell   |
-| Infrastructure Configuration | YAML                       |
+| Category | Technologies |
+|---|---|
+| Frontend | React.js, JavaScript, SCSS |
+| Version Control | Git, GitHub |
+| Containerization | Docker, Docker Compose |
+| CI/CD | Jenkins |
+| Code Quality / Security | SonarQube |
+| Monitoring | Prometheus, Grafana |
+| Logging | Loki, Promtail |
+| Web Server / Reverse Proxy | Nginx |
+| Scripting | PowerShell, Batch, Shell |
+| Infrastructure Configuration | YAML |
 
 ## ✨ Key Features
 
@@ -48,19 +54,23 @@ Git / GitHub
     ↓
 Jenkins CI/CD
     ↓
-Code Quality & Security Analysis
+SonarQube
+    ↓
+OWASP Dependency Check
+    ↓
+Trivy Security Scan
     ↓
 Docker Build
     ↓
+Nexus Repository
+    ↓
+Trivy Image Scan
+    ↓
 Container Deployment
-    ↓
-Nginx
-    ↓
-Application
     ↓
 Prometheus → Grafana
     ↓
-Loki ← Promtail
+Application
 ```
 
 ## 🐳 Docker
@@ -94,7 +104,7 @@ docker compose down
 
 ## 🔧 Jenkins CI/CD
 
-Jenkins is used to automate the CI/CD workflow.
+Jenkins is used to automate the complete CI/CD workflow.
 
 The repository contains:
 
@@ -103,18 +113,34 @@ jenkinsfile
 jenkins/
 ```
 
-The pipeline can be used to automate stages such as:
+The pipeline automates source-code checkout, code analysis, dependency installation, security scanning, Docker image build, image push, image scanning, and deployment.
+
+### Jenkins Pipeline
+
+![Jenkins CI/CD Pipeline](./jenkins-pipeline.png.png)
+
+The pipeline executes the following stages:
 
 ```text
-Checkout
-   ↓
-Build
-   ↓
-Code Quality / Security
-   ↓
-Docker Build
-   ↓
-Deployment
+Checkout SCM
+     ↓
+Git Checkout
+     ↓
+SonarQube Analysis
+     ↓
+Install Dependencies
+     ↓
+OWASP Dependency Check
+     ↓
+Trivy FS Scan
+     ↓
+Build & Push Docker Image
+     ↓
+Trivy Image Scan
+     ↓
+Deploy Container
+     ↓
+Post Actions
 ```
 
 ## 🔍 SonarQube
@@ -126,24 +152,95 @@ SonarQube is integrated into the DevOps environment to support:
 * Identification of potential issues
 * Security-oriented code analysis
 
-## 📊 Monitoring with Prometheus & Grafana
+### SonarQube Dashboard
 
-Prometheus is configured for metrics collection and Grafana is used to visualize monitoring data.
+![SonarQube Dashboard](./sonarqube-dashboard.png.png)
 
-The repository contains multiple Grafana dashboards, including:
+### SonarQube Analysis Activity
 
-* Application Dashboard
-* CI/CD Dashboard
-* Docker Dashboard
-* Health Dashboard
-* System Dashboard
+The SonarQube activity section provides an overview of the analyses performed during the project.
 
-Configuration files are available under:
+![SonarQube Activity](./sonarqube-activity.png.png)
+
+## 🔐 Security Scanning
+
+Security scanning is integrated into the CI/CD pipeline to identify potential vulnerabilities before deployment.
+
+The pipeline includes:
+
+* OWASP Dependency Check
+* Trivy File System Scan
+* Trivy Docker Image Scan
+
+## 📦 Nexus Repository
+
+Nexus Repository Manager is used as a private Docker container registry for storing and managing Docker images.
+
+The Zomato Clone Docker image was successfully built, pushed to the Nexus Docker registry, and pulled back from the registry.
+
+### Nexus Dashboard
+
+![Nexus Dashboard](./nexus-dashboard.png.png)
+
+### Zomato Clone Docker Image in Nexus
+
+The `zomato-clone` Docker image is stored inside the configured `docker-private` repository.
+
+![Nexus Docker Registry](./nexus-docker-registry.png.png)
+
+## 📊 Monitoring with Prometheus
+
+Prometheus is configured for metrics collection and monitoring of the DevOps environment.
+
+The repository contains monitoring configuration under:
 
 ```text
-grafana/
 prometheus/
 ```
+
+### Prometheus Services
+
+Prometheus monitors multiple services in the DevOps environment.
+
+![Prometheus Services](./prometheus-services.png.png)
+
+### Prometheus Targets
+
+Prometheus targets provide an overview of the services being monitored.
+
+![Prometheus Targets](./prometheus-targets.png.png)
+
+### Prometheus CPU Usage
+
+CPU usage is monitored using Prometheus metrics collected from the system and containers.
+
+![Prometheus CPU Usage](./prometheus-cpu-usage.png.png)
+
+### Prometheus Memory Usage
+
+Memory utilization is monitored over time using Prometheus metrics.
+
+![Prometheus Memory Usage](./prometheus-memory-usage.png.png)
+
+## 📈 Grafana
+
+Grafana is used to visualize the metrics collected by Prometheus.
+
+The monitoring environment uses Grafana dashboards to visualize system and container performance.
+
+### Grafana & Prometheus Integration
+
+Grafana is connected to Prometheus as a data source for visualization and monitoring.
+
+![Grafana Prometheus Connection](./grafana-prometheus-connection.png.png)
+
+The Grafana monitoring environment can be used to visualize:
+
+* CPU utilization
+* Memory usage
+* Container metrics
+* Service availability
+* System performance
 
 ## 📝 Centralized Logging
 
@@ -209,7 +306,7 @@ zomato-devops-project/
 │
 ├── Dockerfile
 ├── docker-compose.yml
-├── jenkinsfile
+├── Jenkinsfile
 ├── package.json
 ├── PROJECT_EXPLANATION.md
 ├── VIVA_QUESTIONS.md
